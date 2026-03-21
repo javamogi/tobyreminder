@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toby.ai.tobyreminder.domain.ReminderList;
 import toby.ai.tobyreminder.repository.ReminderListRepository;
+import toby.ai.tobyreminder.repository.ReminderRepository;
 import toby.ai.tobyreminder.dto.ReminderListRequest;
 import toby.ai.tobyreminder.dto.ReminderListResponse;
 import toby.ai.tobyreminder.service.ports.in.ReminderListService;
@@ -18,6 +19,7 @@ import java.util.NoSuchElementException;
 public class DefaultReminderListService implements ReminderListService {
 
     private final ReminderListRepository reminderListRepository;
+    private final ReminderRepository reminderRepository;
 
     @Override
     @Transactional
@@ -35,7 +37,7 @@ public class DefaultReminderListService implements ReminderListService {
     @Override
     public List<ReminderListResponse> findAll() {
         return reminderListRepository.findAllByOrderByDisplayOrderAsc().stream()
-                .map(list -> ReminderListResponse.from(list))
+                .map(list -> ReminderListResponse.from(list, reminderRepository.countByListIdAndCompletedFalse(list.getId())))
                 .toList();
     }
 

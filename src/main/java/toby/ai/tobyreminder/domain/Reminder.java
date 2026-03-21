@@ -10,27 +10,30 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class ReminderList {
+public class Reminder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "list_id", nullable = false)
+    private ReminderList list;
 
     @Column(nullable = false)
-    private String color = "#007AFF";
+    private String title;
+
+    private String notes;
 
     @Column(nullable = false)
-    private String icon = "list.bullet";
+    private boolean completed;
+
+    private LocalDateTime completedAt;
 
     @Column(nullable = false)
     private Integer displayOrder = 0;
@@ -42,21 +45,27 @@ public class ReminderList {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reminder> reminders = new ArrayList<>();
-
     @Builder
-    public ReminderList(String name, String color, String icon, Integer displayOrder) {
-        this.name = name;
-        this.color = color != null ? color : "#007AFF";
-        this.icon = icon != null ? icon : "list.bullet";
+    public Reminder(ReminderList list, String title, String notes, Integer displayOrder) {
+        this.list = list;
+        this.title = title;
+        this.notes = notes;
+        this.completed = false;
         this.displayOrder = displayOrder != null ? displayOrder : 0;
     }
 
-    public void update(String name, String color, String icon) {
-        this.name = name;
-        this.color = color != null ? color : this.color;
-        this.icon = icon != null ? icon : this.icon;
+    public void update(String title, String notes) {
+        this.title = title;
+        this.notes = notes;
+    }
+
+    public void toggleComplete() {
+        this.completed = !this.completed;
+        this.completedAt = this.completed ? LocalDateTime.now() : null;
+    }
+
+    public void changeList(ReminderList list) {
+        this.list = list;
     }
 
     public void updateDisplayOrder(Integer displayOrder) {

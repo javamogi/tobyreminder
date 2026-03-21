@@ -1,49 +1,49 @@
 # Apple Reminders Web - Tasks
 
-> 총 **88개** 작업 | 완료: 0/88
+> 총 **88개** 작업 | 완료: 27/88
 
 ---
 
 ## Phase 1 — 백엔드 기본 CRUD API
 
 ### 1.1 프로젝트 설정
-- [ ] `application.properties` 설정 (H2 인메모리, JPA ddl-auto, H2 Console 활성화)
-- [ ] CORS 설정 클래스 (`http://localhost:3000` 허용)
-- [ ] JPA Auditing 활성화 (`@EnableJpaAuditing`, `@CreatedDate`, `@LastModifiedDate`)
+- [x] `application.properties` 설정 (H2 인메모리, JPA ddl-auto, H2 Console 활성화)
+- [x] CORS 설정 클래스 (`http://localhost:3000` 허용)
+- [x] JPA Auditing 활성화 (`@EnableJpaAuditing`, `@CreatedDate`, `@LastModifiedDate`)
 
 ### 1.2 엔티티 & 리포지토리
-- [ ] `Priority` enum 생성 (NONE, LOW, MEDIUM, HIGH)
-- [ ] `ReminderList` 엔티티 (id, name, color, icon, displayOrder, createdAt, updatedAt)
-- [ ] `Reminder` 엔티티 (id, title, notes, isCompleted, completedAt, displayOrder, createdAt, updatedAt)
-- [ ] `ReminderList` ↔ `Reminder` 연관관계 매핑 (OneToMany / ManyToOne)
-- [ ] `ReminderListRepository` (JpaRepository)
-- [ ] `ReminderRepository` (JpaRepository)
+- [x] `Priority` enum 생성 (NONE, LOW, MEDIUM, HIGH)
+- [x] `ReminderList` 엔티티 (id, name, color, icon, displayOrder, createdAt, updatedAt)
+- [x] `Reminder` 엔티티 (id, title, notes, isCompleted, completedAt, displayOrder, createdAt, updatedAt)
+- [x] `ReminderList` ↔ `Reminder` 연관관계 매핑 (OneToMany / ManyToOne)
+- [x] `ReminderListRepository` (JpaRepository)
+- [x] `ReminderRepository` (JpaRepository)
 
 ### 1.3 DTO
-- [ ] `ReminderListRequest` (생성/수정 요청)
-- [ ] `ReminderListResponse` (응답 — 리마인더 카운트 포함)
-- [ ] `ReminderRequest` (생성/수정 요청)
-- [ ] `ReminderResponse` (응답)
+- [x] `ReminderListRequest` (생성/수정 요청)
+- [x] `ReminderListResponse` (응답 — 리마인더 카운트 포함)
+- [x] `ReminderRequest` (생성/수정 요청)
+- [x] `ReminderResponse` (응답)
 
 ### 1.4 리스트 API
-- [ ] `ReminderListService` 서비스 클래스
-- [ ] `POST /api/lists` — 리스트 생성
-- [ ] `GET /api/lists` — 전체 리스트 조회 (미완료 리마인더 카운트 포함)
-- [ ] `GET /api/lists/{id}` — 리스트 상세 조회
-- [ ] `PUT /api/lists/{id}` — 리스트 수정 (이름, 색상, 아이콘)
-- [ ] `DELETE /api/lists/{id}` — 리스트 삭제 (cascade 리마인더 삭제)
+- [x] `ReminderListService` 서비스 클래스
+- [x] `POST /api/lists` — 리스트 생성
+- [x] `GET /api/lists` — 전체 리스트 조회 (미완료 리마인더 카운트 포함)
+- [x] `GET /api/lists/{id}` — 리스트 상세 조회
+- [x] `PUT /api/lists/{id}` — 리스트 수정 (이름, 색상, 아이콘)
+- [x] `DELETE /api/lists/{id}` — 리스트 삭제 (cascade 리마인더 삭제)
 
 ### 1.5 리마인더 API
-- [ ] `ReminderService` 서비스 클래스
-- [ ] `POST /api/lists/{listId}/reminders` — 리마인더 생성
-- [ ] `GET /api/lists/{listId}/reminders` — 리스트 내 리마인더 조회
-- [ ] `GET /api/reminders/{id}` — 리마인더 상세 조회
-- [ ] `PUT /api/reminders/{id}` — 리마인더 수정
-- [ ] `DELETE /api/reminders/{id}` — 리마인더 삭제
-- [ ] `PATCH /api/reminders/{id}/complete` — 완료 토글
+- [x] `ReminderService` 서비스 클래스
+- [x] `POST /api/lists/{listId}/reminders` — 리마인더 생성
+- [x] `GET /api/lists/{listId}/reminders` — 리스트 내 리마인더 조회
+- [x] `GET /api/reminders/{id}` — 리마인더 상세 조회
+- [x] `PUT /api/reminders/{id}` — 리마인더 수정
+- [x] `DELETE /api/reminders/{id}` — 리마인더 삭제
+- [x] `PATCH /api/reminders/{id}/complete` — 완료 토글
 
 ### 1.6 예외 처리
-- [ ] 글로벌 예외 핸들러 (`@RestControllerAdvice`) — 404, 400 응답
+- [x] 글로벌 예외 핸들러 (`@RestControllerAdvice`) — 404, 400 응답
 
 ---
 
