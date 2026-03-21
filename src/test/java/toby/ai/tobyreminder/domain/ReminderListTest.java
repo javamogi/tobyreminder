@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 
+import toby.ai.tobyreminder.repository.ReminderListRepository;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
