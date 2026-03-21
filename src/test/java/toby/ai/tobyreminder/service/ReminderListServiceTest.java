@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import toby.ai.tobyreminder.dto.ReminderListRequest;
 import toby.ai.tobyreminder.dto.ReminderListResponse;
-import toby.ai.tobyreminder.ports.inp.ReminderListService;
+import toby.ai.tobyreminder.service.ports.in.ReminderListService;
 import toby.ai.tobyreminder.repository.ReminderListRepository;
 
 import java.util.List;

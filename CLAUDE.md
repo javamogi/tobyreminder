@@ -3,16 +3,17 @@
 ### 패키지 구조
 ```
 toby.ai.tobyreminder
-├── domain/          # 엔티티
-├── repository/      # JPA Repository
-├── ports/inp/       # Service 인터페이스
-├── service/         # Service 구현 클래스
-├── controller/      # REST Controller
-└── dto/             # 요청/응답 DTO
+├── domain/              # 엔티티
+├── repository/          # JPA Repository
+├── service/
+│   ├── ports/in/        # Service 인터페이스
+│   └── Default*.java    # Service 구현 클래스
+├── controller/          # REST Controller
+└── dto/                 # 요청/응답 DTO
 ```
 
 ### Service 계층
-- 인터페이스는 `ports/inp` 패키지에 정의
+- 인터페이스는 `service/ports/in` 패키지에 정의
 - 구현 클래스는 `service` 패키지에 `Default` 접두사 (예: `DefaultReminderListService`)
 - `Impl` 접미사 사용 금지
 
@@ -23,7 +24,7 @@ toby.ai.tobyreminder
 
 ### 코드 스타일
 - 불필요한 주석, docstring 추가 금지
-- 간결하고 명확한 코드 우선
+- 간결하고 명확한 코드 우선ㅔ
 
 ### 참고 문서
 - spec.md: 기능 명세

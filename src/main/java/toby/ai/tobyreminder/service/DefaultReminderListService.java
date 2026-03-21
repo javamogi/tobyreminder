@@ -7,7 +7,7 @@ import toby.ai.tobyreminder.domain.ReminderList;
 import toby.ai.tobyreminder.repository.ReminderListRepository;
 import toby.ai.tobyreminder.dto.ReminderListRequest;
 import toby.ai.tobyreminder.dto.ReminderListResponse;
-import toby.ai.tobyreminder.ports.inp.ReminderListService;
+import toby.ai.tobyreminder.service.ports.in.ReminderListService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
