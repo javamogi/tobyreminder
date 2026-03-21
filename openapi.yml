@@ -1,0 +1,179 @@
+openapi: 3.1.0
+info:
+  title: Apple Reminders Web API
+  description: Apple Reminders 웹 클론 REST API
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /api/lists:
+    get:
+      tags: [ReminderList]
+      summary: 모든 리스트 조회
+      operationId: findAllLists
+      responses:
+        "200":
+          description: 리스트 목록 (displayOrder 순)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReminderListResponse"
+
+    post:
+      tags: [ReminderList]
+      summary: 리스트 생성
+      operationId: createList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderListRequest"
+      responses:
+        "201":
+          description: 생성된 리스트
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderListResponse"
+        "400":
+          description: 유효성 검증 실패
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/lists/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+
+    get:
+      tags: [ReminderList]
+      summary: 리스트 상세 조회
+      operationId: findListById
+      responses:
+        "200":
+          description: 리스트 상세
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderListResponse"
+        "404":
+          description: 리스트를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    put:
+      tags: [ReminderList]
+      summary: 리스트 수정
+      operationId: updateList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReminderListRequest"
+      responses:
+        "200":
+          description: 수정된 리스트
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReminderListResponse"
+        "400":
+          description: 유효성 검증 실패
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: 리스트를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      tags: [ReminderList]
+      summary: 리스트 삭제
+      operationId: deleteList
+      responses:
+        "204":
+          description: 삭제 완료
+        "404":
+          description: 리스트를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    ReminderListRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: 리스트 이름
+          example: 개인
+        color:
+          type: string
+          description: HEX 색상 코드
+          default: "#007AFF"
+          example: "#FF3B30"
+        icon:
+          type: string
+          description: 아이콘 식별자
+          default: list.bullet
+          example: star
+
+    ReminderListResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: 개인
+        color:
+          type: string
+          example: "#007AFF"
+        icon:
+          type: string
+          example: list.bullet
+        displayOrder:
+          type: integer
+          example: 0
+        reminderCount:
+          type: integer
+          format: int64
+          example: 5
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: 리스트를 찾을 수 없습니다. id=999
