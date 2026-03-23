@@ -23,8 +23,9 @@ public class ReminderController {
     }
 
     @GetMapping("/api/lists/{listId}/reminders")
-    public List<ReminderResponse> findByListId(@PathVariable Long listId) {
-        return reminderService.findByListId(listId);
+    public List<ReminderResponse> findByListId(@PathVariable Long listId,
+                                                @RequestParam(required = false) String sort) {
+        return reminderService.findByListId(listId, sort);
     }
 
     @GetMapping("/api/reminders/{id}")
@@ -51,5 +52,16 @@ public class ReminderController {
     @PatchMapping("/api/reminders/{id}/flag")
     public ReminderResponse toggleFlag(@PathVariable Long id) {
         return reminderService.toggleFlag(id);
+    }
+
+    @GetMapping("/api/reminders/search")
+    public List<ReminderResponse> search(@RequestParam String q) {
+        return reminderService.search(q);
+    }
+
+    @PatchMapping("/api/reminders/reorder")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void reorder(@RequestBody List<Long> ids) {
+        reminderService.reorderReminders(ids);
     }
 }

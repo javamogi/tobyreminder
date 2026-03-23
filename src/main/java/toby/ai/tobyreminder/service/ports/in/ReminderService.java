@@ -11,6 +11,8 @@ public interface ReminderService {
 
     List<ReminderResponse> findByListId(Long listId);
 
+    List<ReminderResponse> findByListId(Long listId, String sort);
+
     ReminderResponse findById(Long id);
 
     ReminderResponse update(Long id, ReminderRequest request);
@@ -20,4 +22,8 @@ public interface ReminderService {
     ReminderResponse toggleComplete(Long id);
 
     ReminderResponse toggleFlag(Long id);
+
+    List<ReminderResponse> search(String keyword);
+
+    void reorderReminders(List<Long> ids);
 }

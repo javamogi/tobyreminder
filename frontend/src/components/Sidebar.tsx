@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import useSWR from "swr";
 import { api } from "@/lib/api";
 import { ReminderList } from "@/types";
@@ -8,10 +8,22 @@ import { useStore, SmartListType } from "@/store/useStore";
 import { SmartListGrid } from "./SmartListGrid";
 
 export function Sidebar() {
-  const { selectedListId, smartListType, selectList, selectSmartList } = useStore();
+  const { selectedListId, smartListType, searchQuery, selectList, selectSmartList, setSearchQuery } = useStore();
   const { data: lists, mutate } = useSWR<ReminderList[]>("/api/lists", () => api.lists.getAll());
   const [isAdding, setIsAdding] = useState(false);
   const [newListName, setNewListName] = useState("");
+  const [localSearch, setLocalSearch] = useState(searchQuery);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setLocalSearch(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => setSearchQuery(value), 300);
+  }, [setSearchQuery]);
+
+  useEffect(() => {
+    if (!searchQuery) setLocalSearch("");
+  }, [searchQuery]);
 
   const handleAddList = async () => {
     if (!newListName.trim()) {
@@ -24,9 +36,43 @@ export function Sidebar() {
     mutate();
   };
 
+  const handleDeleteList = async (e: React.MouseEvent, listId: number) => {
+    e.stopPropagation();
+    if (!confirm("이 리스트를 삭제하시겠습니까?")) return;
+    await api.lists.delete(listId);
+    mutate();
+  };
+
   return (
     <aside className="w-[280px] min-w-[280px] h-full flex flex-col border-r"
       style={{ backgroundColor: "#F5F5F7", borderColor: "rgba(0,0,0,0.1)" }}>
+      <div className="p-3 pb-0">
+        <div
+          className="flex items-center gap-2 px-2.5 py-1.5 rounded-[10px]"
+          style={{ backgroundColor: "rgba(0,0,0,0.06)" }}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4.5" stroke="#86868B" strokeWidth="1.2" />
+            <path d="M9.5 9.5L12.5 12.5" stroke="#86868B" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+          <input
+            className="flex-1 text-[13px] bg-transparent outline-none"
+            placeholder="검색"
+            value={localSearch}
+            onChange={(e) => handleSearchChange(e.target.value)}
+          />
+          {localSearch && (
+            <button
+              onClick={() => handleSearchChange("")}
+              className="text-[12px] cursor-pointer"
+              style={{ color: "#86868B" }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="flex-1 overflow-y-auto p-3">
         <SmartListGrid
           selectedType={smartListType}
@@ -43,7 +89,7 @@ export function Sidebar() {
               <li
                 key={list.id}
                 onClick={() => selectList(list.id)}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors duration-150"
+                className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors duration-150 group"
                 style={{
                   backgroundColor: selectedListId === list.id ? "rgba(0,122,255,0.12)" : "transparent",
                 }}

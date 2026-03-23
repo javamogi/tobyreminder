@@ -43,4 +43,10 @@ public class ReminderListController {
     public void delete(@PathVariable Long id) {
         reminderListService.delete(id);
     }
+
+    @PatchMapping("/reorder")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void reorder(@RequestBody List<Long> ids) {
+        reminderListService.reorderLists(ids);
+    }
 }

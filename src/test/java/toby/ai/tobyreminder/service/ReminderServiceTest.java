@@ -247,4 +247,70 @@ class ReminderServiceTest {
             assertThat(unflagged.flagged()).isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("search")
+    class Search {
+
+        @Test
+        @DisplayName("제목으로 검색한다")
+        void searchByTitle() {
+            reminderService.create(listId, simpleRequest("장보기", null));
+            reminderService.create(listId, simpleRequest("운동하기", null));
+
+            List<ReminderResponse> result = reminderService.search("장보");
+
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).title()).isEqualTo("장보기");
+        }
+
+        @Test
+        @DisplayName("메모로 검색한다")
+        void searchByNotes() {
+            reminderService.create(listId, simpleRequest("장보기", "우유와 빵"));
+            reminderService.create(listId, simpleRequest("운동", "헬스장"));
+
+            List<ReminderResponse> result = reminderService.search("우유");
+
+            assertThat(result).hasSize(1);
+            assertThat(result.get(0).title()).isEqualTo("장보기");
+        }
+    }
+
+    @Nested
+    @DisplayName("reorder")
+    class Reorder {
+
+        @Test
+        @DisplayName("리마인더 순서를 변경한다")
+        void reorderReminders() {
+            ReminderResponse first = reminderService.create(listId, simpleRequest("첫번째", null));
+            ReminderResponse second = reminderService.create(listId, simpleRequest("두번째", null));
+
+            reminderService.reorderReminders(List.of(second.id(), first.id()));
+
+            List<ReminderResponse> result = reminderService.findByListId(listId);
+            assertThat(result.get(0).title()).isEqualTo("두번째");
+            assertThat(result.get(1).title()).isEqualTo("첫번째");
+        }
+    }
+
+    @Nested
+    @DisplayName("findByListId with sort")
+    class FindByListIdWithSort {
+
+        @Test
+        @DisplayName("제목 기준으로 정렬한다")
+        void sortByTitle() {
+            reminderService.create(listId, simpleRequest("다", null));
+            reminderService.create(listId, simpleRequest("가", null));
+            reminderService.create(listId, simpleRequest("나", null));
+
+            List<ReminderResponse> result = reminderService.findByListId(listId, "title");
+
+            assertThat(result.get(0).title()).isEqualTo("가");
+            assertThat(result.get(1).title()).isEqualTo("나");
+            assertThat(result.get(2).title()).isEqualTo("다");
+        }
+    }
 }

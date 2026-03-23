@@ -42,10 +42,17 @@ public class DefaultReminderService implements ReminderService {
 
     @Override
     public List<ReminderResponse> findByListId(Long listId) {
+        return findByListId(listId, null);
+    }
+
+    @Override
+    public List<ReminderResponse> findByListId(Long listId, String sort) {
         getListById(listId);
-        return reminderRepository.findByListIdAndCompletedFalseOrderByDisplayOrderAsc(listId).stream()
-                .map(ReminderResponse::from)
-                .toList();
+        List<Reminder> reminders = reminderRepository.findByListIdAndCompletedFalseOrderByDisplayOrderAsc(listId);
+        if (sort != null) {
+            reminders = sortReminders(reminders, sort);
+        }
+        return reminders.stream().map(ReminderResponse::from).toList();
     }
 
     @Override
@@ -83,6 +90,35 @@ public class DefaultReminderService implements ReminderService {
         Reminder reminder = getReminderById(id);
         reminder.toggleComplete();
         return ReminderResponse.from(reminder);
+    }
+
+    @Override
+    public List<ReminderResponse> search(String keyword) {
+        return reminderRepository.searchByKeyword(keyword).stream()
+                .map(ReminderResponse::from)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void reorderReminders(List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            Reminder reminder = getReminderById(ids.get(i));
+            reminder.updateDisplayOrder(i);
+        }
+    }
+
+    private List<Reminder> sortReminders(List<Reminder> reminders, String sort) {
+        java.util.List<Reminder> sorted = new java.util.ArrayList<>(reminders);
+        switch (sort) {
+            case "dueDate" -> sorted.sort(java.util.Comparator.comparing(
+                    Reminder::getDueDate, java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
+            case "createdAt" -> sorted.sort(java.util.Comparator.comparing(Reminder::getCreatedAt));
+            case "priority" -> sorted.sort(java.util.Comparator.comparing(
+                    (Reminder r) -> r.getPriority().ordinal()).reversed());
+            case "title" -> sorted.sort(java.util.Comparator.comparing(Reminder::getTitle));
+        }
+        return sorted;
     }
 
     private ReminderList getListById(Long listId) {

@@ -10,10 +10,23 @@ interface Props {
   list: ReminderList;
 }
 
+const sortOptions = [
+  { value: "", label: "기본" },
+  { value: "dueDate", label: "마감일" },
+  { value: "createdAt", label: "생성일" },
+  { value: "priority", label: "우선순위" },
+  { value: "title", label: "제목" },
+];
+
 export function ReminderListView({ list }: Props) {
+  const [sort, setSort] = useState("");
+  const [showSortMenu, setShowSortMenu] = useState(false);
   const { data: reminders, mutate } = useSWR<Reminder[]>(
-    `/api/lists/${list.id}/reminders`,
-    () => api.reminders.getByList(list.id)
+    `/api/lists/${list.id}/reminders${sort ? `?sort=${sort}` : ""}`,
+    () => {
+      const url = `/lists/${list.id}/reminders${sort ? `?sort=${sort}` : ""}`;
+      return fetch(`/api${url.startsWith("/") ? url : "/" + url}`).then(r => r.json());
+    }
   );
   const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
@@ -45,10 +58,57 @@ export function ReminderListView({ list }: Props) {
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
-      <div className="px-6 pt-6 pb-2">
+      <div className="px-6 pt-6 pb-2 flex items-center justify-between">
         <h1 className="text-[28px] font-bold" style={{ color: list.color }}>
           {list.name}
         </h1>
+        <div className="relative">
+          <button
+            onClick={() => setShowSortMenu(!showSortMenu)}
+            className="w-8 h-8 flex items-center justify-center rounded-md cursor-pointer"
+            style={{ color: "#86868B" }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.06)")}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+          >
+            ···
+          </button>
+          {showSortMenu && (
+            <>
+              <div className="fixed inset-0" onClick={() => setShowSortMenu(false)} />
+              <div
+                className="absolute right-0 top-10 w-40 py-1 rounded-[10px] z-10"
+                style={{
+                  backgroundColor: "white",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                  border: "0.5px solid rgba(0,0,0,0.1)",
+                }}
+              >
+                <div className="px-3 py-1 text-[11px] font-semibold" style={{ color: "#86868B" }}>
+                  정렬
+                </div>
+                {sortOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => { setSort(opt.value); setShowSortMenu(false); }}
+                    className="w-full text-left px-3 py-1.5 text-[13px] cursor-pointer"
+                    style={{
+                      backgroundColor: sort === opt.value ? "rgba(0,122,255,0.12)" : "transparent",
+                      color: sort === opt.value ? "#007AFF" : "#1D1D1F",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (sort !== opt.value) e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.04)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = sort === opt.value ? "rgba(0,122,255,0.12)" : "transparent";
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-6">

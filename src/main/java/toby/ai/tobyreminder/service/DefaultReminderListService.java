@@ -62,6 +62,15 @@ public class DefaultReminderListService implements ReminderListService {
         reminderListRepository.delete(list);
     }
 
+    @Override
+    @Transactional
+    public void reorderLists(List<Long> ids) {
+        for (int i = 0; i < ids.size(); i++) {
+            ReminderList list = getById(ids.get(i));
+            list.updateDisplayOrder(i);
+        }
+    }
+
     private ReminderList getById(Long id) {
         return reminderListRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("리스트를 찾을 수 없습니다. id=" + id));

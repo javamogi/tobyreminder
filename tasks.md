@@ -1,6 +1,6 @@
 # Apple Reminders Web - Tasks
 
-> 총 **88개** 작업 | 완료: 72/88
+> 총 **88개** 작업 | 완료: 83/88
 
 ---
 
@@ -128,24 +128,24 @@
 ## Phase 5 — 검색 + 정렬 + 리스트 관리
 
 ### 5.1 Backend
-- [ ] `GET /api/reminders/search?q={keyword}` — title/notes LIKE 검색
-- [ ] 리마인더 조회 API 정렬 파라미터 (`sort=dueDate|createdAt|priority|title`)
-- [ ] `PATCH /api/lists/reorder` — 리스트 순서 변경
-- [ ] `PATCH /api/reminders/reorder` — 리마인더 순서 변경
+- [x] `GET /api/reminders/search?q={keyword}` — title/notes LIKE 검색
+- [x] 리마인더 조회 API 정렬 파라미터 (`sort=dueDate|createdAt|priority|title`)
+- [x] `PATCH /api/lists/reorder` — 리스트 순서 변경
+- [x] `PATCH /api/reminders/reorder` — 리마인더 순서 변경
 
 ### 5.2 검색 UI
-- [ ] 사이드바 상단 검색 필드 (둥근 검색바, 돋보기 아이콘)
-- [ ] debounce (300ms) → 검색 API 호출
-- [ ] 콘텐츠 영역 검색 결과 목록 전환
-- [ ] 검색 결과 없음 빈 상태
+- [x] 사이드바 상단 검색 필드 (둥근 검색바, 돋보기 아이콘)
+- [x] debounce (300ms) → 검색 API 호출
+- [x] 콘텐츠 영역 검색 결과 목록 전환
+- [x] 검색 결과 없음 빈 상태
 
 ### 5.3 정렬 UI
-- [ ] 툴바 `···` 메뉴 → 정렬 옵션 드롭다운
-- [ ] 마감일 / 생성일 / 우선순위 / 제목 기준 정렬
+- [x] 툴바 `···` 메뉴 → 정렬 옵션 드롭다운
+- [x] 마감일 / 생성일 / 우선순위 / 제목 기준 정렬
 
 ### 5.4 리스트 관리 UI
 - [ ] 리스트 이름/색상 수정 (색상 팔레트 팝오버)
-- [ ] 리스트 삭제 확인 다이얼로그
+- [x] 리스트 삭제 확인 다이얼로그
 - [ ] 리스트 우클릭 컨텍스트 메뉴
 
 ---
