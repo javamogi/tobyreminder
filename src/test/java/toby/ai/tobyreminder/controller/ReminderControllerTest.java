@@ -43,7 +43,7 @@ class ReminderControllerTest {
     private Long createReminderAndGetId(String title, String notes) throws Exception {
         String response = mockMvc.perform(post("/api/lists/{listId}/reminders", listId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ReminderRequest(title, notes))))
+                        .content(objectMapper.writeValueAsString(new ReminderRequest(title, notes, null, null, null, null))))
                 .andReturn().getResponse().getContentAsString();
         return objectMapper.readTree(response).get("id").asLong();
     }
@@ -57,7 +57,7 @@ class ReminderControllerTest {
         void createReminder() throws Exception {
             mockMvc.perform(post("/api/lists/{listId}/reminders", listId)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReminderRequest("장보기", "우유, 빵"))))
+                            .content(objectMapper.writeValueAsString(new ReminderRequest("장보기", "우유, 빵", null, null, null, null))))
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").isNumber())
                     .andExpect(jsonPath("$.title").value("장보기"))
@@ -71,7 +71,7 @@ class ReminderControllerTest {
         void createWithBlankTitle() throws Exception {
             mockMvc.perform(post("/api/lists/{listId}/reminders", listId)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReminderRequest("", null))))
+                            .content(objectMapper.writeValueAsString(new ReminderRequest("", null, null, null, null, null))))
                     .andExpect(status().isBadRequest());
         }
 
@@ -80,7 +80,7 @@ class ReminderControllerTest {
         void createWithInvalidListId() throws Exception {
             mockMvc.perform(post("/api/lists/{listId}/reminders", 999)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReminderRequest("장보기", null))))
+                            .content(objectMapper.writeValueAsString(new ReminderRequest("장보기", null, null, null, null, null))))
                     .andExpect(status().isNotFound());
         }
     }
@@ -142,7 +142,7 @@ class ReminderControllerTest {
 
             mockMvc.perform(put("/api/reminders/{id}", id)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReminderRequest("운동하기", "헬스장"))))
+                            .content(objectMapper.writeValueAsString(new ReminderRequest("운동하기", "헬스장", null, null, null, null))))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.title").value("운동하기"))
                     .andExpect(jsonPath("$.notes").value("헬스장"));
@@ -153,7 +153,7 @@ class ReminderControllerTest {
         void updateNotFound() throws Exception {
             mockMvc.perform(put("/api/reminders/{id}", 999)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(new ReminderRequest("운동", null))))
+                            .content(objectMapper.writeValueAsString(new ReminderRequest("운동", null, null, null, null, null))))
                     .andExpect(status().isNotFound());
         }
     }
@@ -213,6 +213,28 @@ class ReminderControllerTest {
         @DisplayName("404 - 존재하지 않는 리마인더")
         void toggleNotFound() throws Exception {
             mockMvc.perform(patch("/api/reminders/{id}/complete", 999))
+                    .andExpect(status().isNotFound());
+        }
+    }
+
+    @Nested
+    @DisplayName("PATCH /api/reminders/{id}/flag")
+    class ToggleFlag {
+
+        @Test
+        @DisplayName("200 - 플래그 토글한다")
+        void toggleFlag() throws Exception {
+            Long id = createReminderAndGetId("장보기", null);
+
+            mockMvc.perform(patch("/api/reminders/{id}/flag", id))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.flagged").value(true));
+        }
+
+        @Test
+        @DisplayName("404 - 존재하지 않는 리마인더")
+        void toggleFlagNotFound() throws Exception {
+            mockMvc.perform(patch("/api/reminders/{id}/flag", 999))
                     .andExpect(status().isNotFound());
         }
     }

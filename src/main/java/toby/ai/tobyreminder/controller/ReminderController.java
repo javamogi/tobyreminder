@@ -47,4 +47,9 @@ public class ReminderController {
     public ReminderResponse toggleComplete(@PathVariable Long id) {
         return reminderService.toggleComplete(id);
     }
+
+    @PatchMapping("/api/reminders/{id}/flag")
+    public ReminderResponse toggleFlag(@PathVariable Long id) {
+        return reminderService.toggleFlag(id);
+    }
 }

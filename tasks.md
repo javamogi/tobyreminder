@@ -1,6 +1,6 @@
 # Apple Reminders Web - Tasks
 
-> 총 **88개** 작업 | 완료: 47/88
+> 총 **88개** 작업 | 완료: 58/88
 
 ---
 
@@ -82,22 +82,22 @@
 ## Phase 3 — 리마인더 상세 속성
 
 ### 3.1 Backend 엔티티 확장
-- [ ] `Reminder`에 dueDate(LocalDate), dueTime(LocalTime), priority(Priority enum), isFlagged(Boolean) 추가
-- [ ] DTO에 새 필드 반영
-- [ ] `PATCH /api/reminders/{id}/flag` — 플래그 토글 API
+- [x] `Reminder`에 dueDate(LocalDate), dueTime(LocalTime), priority(Priority enum), isFlagged(Boolean) 추가
+- [x] DTO에 새 필드 반영
+- [x] `PATCH /api/reminders/{id}/flag` — 플래그 토글 API
 
 ### 3.2 인라인 상세 편집 확장
-- [ ] 날짜 토글 (ON/OFF) + 캘린더 Date Picker
-- [ ] 시간 토글 (ON/OFF) + Time Picker
-- [ ] 우선순위 드롭다운 (없음 / 낮음 / 보통 / 높음)
-- [ ] 플래그 토글 스위치 (iOS 스타일 Green/Gray)
+- [x] 날짜 토글 (ON/OFF) + 캘린더 Date Picker
+- [x] 시간 토글 (ON/OFF) + Time Picker
+- [x] 우선순위 드롭다운 (없음 / 낮음 / 보통 / 높음)
+- [x] 플래그 토글 스위치 (iOS 스타일 Green/Gray)
 - [ ] 리스트 이동 드롭다운
 
 ### 3.3 리마인더 행 메타 정보
-- [ ] 메모 미리보기 (13px, Secondary, 1줄 truncate)
-- [ ] 마감일 뱃지 (📅 + 날짜텍스트, overdue 빨간색)
-- [ ] 우선순위 뱃지 (`!` / `!!` / `!!!`, Blue)
-- [ ] 플래그 아이콘 (🚩, Orange)
+- [x] 메모 미리보기 (13px, Secondary, 1줄 truncate)
+- [x] 마감일 뱃지 (📅 + 날짜텍스트, overdue 빨간색)
+- [x] 우선순위 뱃지 (`!` / `!!` / `!!!`, Blue)
+- [x] 플래그 아이콘 (🚩, Orange)
 
 ---
 

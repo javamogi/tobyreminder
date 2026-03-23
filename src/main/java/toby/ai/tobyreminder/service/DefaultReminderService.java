@@ -31,6 +31,10 @@ public class DefaultReminderService implements ReminderService {
                 .list(list)
                 .title(request.title())
                 .notes(request.notes())
+                .dueDate(request.dueDate())
+                .dueTime(request.dueTime())
+                .priority(request.priority())
+                .flagged(request.flagged())
                 .displayOrder(nextOrder)
                 .build();
         return ReminderResponse.from(reminderRepository.save(reminder));
@@ -53,7 +57,16 @@ public class DefaultReminderService implements ReminderService {
     @Transactional
     public ReminderResponse update(Long id, ReminderRequest request) {
         Reminder reminder = getReminderById(id);
-        reminder.update(request.title(), request.notes());
+        reminder.update(request.title(), request.notes(), request.dueDate(),
+                request.dueTime(), request.priority(), request.flagged());
+        return ReminderResponse.from(reminder);
+    }
+
+    @Override
+    @Transactional
+    public ReminderResponse toggleFlag(Long id) {
+        Reminder reminder = getReminderById(id);
+        reminder.toggleFlag();
         return ReminderResponse.from(reminder);
     }
 

@@ -18,4 +18,6 @@ public interface ReminderService {
     void delete(Long id);
 
     ReminderResponse toggleComplete(Long id);
+
+    ReminderResponse toggleFlag(Long id);
 }

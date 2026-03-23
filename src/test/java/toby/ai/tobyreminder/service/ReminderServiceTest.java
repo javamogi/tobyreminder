@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import toby.ai.tobyreminder.domain.Priority;
 import toby.ai.tobyreminder.dto.ReminderListRequest;
 import toby.ai.tobyreminder.dto.ReminderListResponse;
 import toby.ai.tobyreminder.dto.ReminderRequest;
@@ -14,6 +15,8 @@ import toby.ai.tobyreminder.dto.ReminderResponse;
 import toby.ai.tobyreminder.service.ports.in.ReminderListService;
 import toby.ai.tobyreminder.service.ports.in.ReminderService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -38,6 +41,10 @@ class ReminderServiceTest {
         listId = list.id();
     }
 
+    private ReminderRequest simpleRequest(String title, String notes) {
+        return new ReminderRequest(title, notes, null, null, null, null);
+    }
+
     @Nested
     @DisplayName("create")
     class Create {
@@ -45,27 +52,42 @@ class ReminderServiceTest {
         @Test
         @DisplayName("리마인더를 생성한다")
         void createReminder() {
-            ReminderResponse response = reminderService.create(listId, new ReminderRequest("장보기", "우유, 빵"));
+            ReminderResponse response = reminderService.create(listId, simpleRequest("장보기", "우유, 빵"));
 
             assertThat(response.id()).isNotNull();
             assertThat(response.title()).isEqualTo("장보기");
             assertThat(response.notes()).isEqualTo("우유, 빵");
             assertThat(response.listId()).isEqualTo(listId);
             assertThat(response.completed()).isFalse();
+            assertThat(response.priority()).isEqualTo(Priority.NONE);
+            assertThat(response.flagged()).isFalse();
+        }
+
+        @Test
+        @DisplayName("모든 속성을 포함하여 생성한다")
+        void createWithAllFields() {
+            ReminderRequest request = new ReminderRequest("장보기", "우유",
+                    LocalDate.of(2026, 3, 25), LocalTime.of(9, 0), Priority.HIGH, true);
+            ReminderResponse response = reminderService.create(listId, request);
+
+            assertThat(response.dueDate()).isEqualTo(LocalDate.of(2026, 3, 25));
+            assertThat(response.dueTime()).isEqualTo(LocalTime.of(9, 0));
+            assertThat(response.priority()).isEqualTo(Priority.HIGH);
+            assertThat(response.flagged()).isTrue();
         }
 
         @Test
         @DisplayName("존재하지 않는 리스트에 생성하면 예외가 발생한다")
         void createWithInvalidListId() {
-            assertThatThrownBy(() -> reminderService.create(999L, new ReminderRequest("장보기", null)))
+            assertThatThrownBy(() -> reminderService.create(999L, simpleRequest("장보기", null)))
                     .isInstanceOf(NoSuchElementException.class);
         }
 
         @Test
         @DisplayName("displayOrder가 순차 증가한다")
         void createWithIncrementingOrder() {
-            reminderService.create(listId, new ReminderRequest("첫번째", null));
-            ReminderResponse second = reminderService.create(listId, new ReminderRequest("두번째", null));
+            reminderService.create(listId, simpleRequest("첫번째", null));
+            ReminderResponse second = reminderService.create(listId, simpleRequest("두번째", null));
 
             assertThat(second.displayOrder()).isEqualTo(1);
         }
@@ -78,8 +100,8 @@ class ReminderServiceTest {
         @Test
         @DisplayName("리스트의 미완료 리마인더를 조회한다")
         void findByListId() {
-            reminderService.create(listId, new ReminderRequest("장보기", null));
-            reminderService.create(listId, new ReminderRequest("운동", null));
+            reminderService.create(listId, simpleRequest("장보기", null));
+            reminderService.create(listId, simpleRequest("운동", null));
 
             List<ReminderResponse> result = reminderService.findByListId(listId);
 
@@ -90,9 +112,9 @@ class ReminderServiceTest {
         @Test
         @DisplayName("완료된 리마인더는 조회되지 않는다")
         void findByListIdExcludesCompleted() {
-            ReminderResponse reminder = reminderService.create(listId, new ReminderRequest("장보기", null));
+            ReminderResponse reminder = reminderService.create(listId, simpleRequest("장보기", null));
             reminderService.toggleComplete(reminder.id());
-            reminderService.create(listId, new ReminderRequest("운동", null));
+            reminderService.create(listId, simpleRequest("운동", null));
 
             List<ReminderResponse> result = reminderService.findByListId(listId);
 
@@ -115,7 +137,7 @@ class ReminderServiceTest {
         @Test
         @DisplayName("ID로 리마인더를 조회한다")
         void findById() {
-            ReminderResponse created = reminderService.create(listId, new ReminderRequest("장보기", "우유"));
+            ReminderResponse created = reminderService.create(listId, simpleRequest("장보기", "우유"));
 
             ReminderResponse response = reminderService.findById(created.id());
 
@@ -138,18 +160,22 @@ class ReminderServiceTest {
         @Test
         @DisplayName("리마인더를 수정한다")
         void updateReminder() {
-            ReminderResponse created = reminderService.create(listId, new ReminderRequest("장보기", "우유"));
+            ReminderResponse created = reminderService.create(listId, simpleRequest("장보기", "우유"));
 
-            ReminderResponse response = reminderService.update(created.id(), new ReminderRequest("운동하기", "헬스장"));
+            ReminderResponse response = reminderService.update(created.id(),
+                    new ReminderRequest("운동하기", "헬스장", LocalDate.of(2026, 4, 1), null, Priority.MEDIUM, true));
 
             assertThat(response.title()).isEqualTo("운동하기");
             assertThat(response.notes()).isEqualTo("헬스장");
+            assertThat(response.dueDate()).isEqualTo(LocalDate.of(2026, 4, 1));
+            assertThat(response.priority()).isEqualTo(Priority.MEDIUM);
+            assertThat(response.flagged()).isTrue();
         }
 
         @Test
         @DisplayName("존재하지 않는 리마인더 수정 시 예외가 발생한다")
         void updateNotFound() {
-            assertThatThrownBy(() -> reminderService.update(999L, new ReminderRequest("운동", null)))
+            assertThatThrownBy(() -> reminderService.update(999L, simpleRequest("운동", null)))
                     .isInstanceOf(NoSuchElementException.class);
         }
     }
@@ -161,7 +187,7 @@ class ReminderServiceTest {
         @Test
         @DisplayName("리마인더를 삭제한다")
         void deleteReminder() {
-            ReminderResponse created = reminderService.create(listId, new ReminderRequest("장보기", null));
+            ReminderResponse created = reminderService.create(listId, simpleRequest("장보기", null));
 
             reminderService.delete(created.id());
 
@@ -184,7 +210,7 @@ class ReminderServiceTest {
         @Test
         @DisplayName("미완료 → 완료로 전환한다")
         void toggleToComplete() {
-            ReminderResponse created = reminderService.create(listId, new ReminderRequest("장보기", null));
+            ReminderResponse created = reminderService.create(listId, simpleRequest("장보기", null));
 
             ReminderResponse response = reminderService.toggleComplete(created.id());
 
@@ -195,13 +221,30 @@ class ReminderServiceTest {
         @Test
         @DisplayName("완료 → 미완료로 전환한다")
         void toggleToIncomplete() {
-            ReminderResponse created = reminderService.create(listId, new ReminderRequest("장보기", null));
+            ReminderResponse created = reminderService.create(listId, simpleRequest("장보기", null));
             reminderService.toggleComplete(created.id());
 
             ReminderResponse response = reminderService.toggleComplete(created.id());
 
             assertThat(response.completed()).isFalse();
             assertThat(response.completedAt()).isNull();
+        }
+    }
+
+    @Nested
+    @DisplayName("toggleFlag")
+    class ToggleFlag {
+
+        @Test
+        @DisplayName("플래그를 토글한다")
+        void toggleFlag() {
+            ReminderResponse created = reminderService.create(listId, simpleRequest("장보기", null));
+
+            ReminderResponse flagged = reminderService.toggleFlag(created.id());
+            assertThat(flagged.flagged()).isTrue();
+
+            ReminderResponse unflagged = reminderService.toggleFlag(created.id());
+            assertThat(unflagged.flagged()).isFalse();
         }
     }
 }

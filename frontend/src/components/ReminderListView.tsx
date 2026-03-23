@@ -3,7 +3,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { api } from "@/lib/api";
-import { Reminder, ReminderList } from "@/types";
+import { Reminder, ReminderList, ReminderRequest } from "@/types";
 import { ReminderRow } from "./ReminderRow";
 
 interface Props {
@@ -38,7 +38,7 @@ export function ReminderListView({ list }: Props) {
     mutate();
   };
 
-  const handleUpdate = async (id: number, data: { title: string; notes?: string }) => {
+  const handleUpdate = async (id: number, data: ReminderRequest) => {
     await api.reminders.update(id, data);
     mutate();
   };

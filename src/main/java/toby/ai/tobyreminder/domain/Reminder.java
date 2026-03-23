@@ -9,7 +9,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -35,6 +37,17 @@ public class Reminder {
 
     private LocalDateTime completedAt;
 
+    private LocalDate dueDate;
+
+    private LocalTime dueTime;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Priority priority = Priority.NONE;
+
+    @Column(nullable = false)
+    private boolean flagged;
+
     @Column(nullable = false)
     private Integer displayOrder = 0;
 
@@ -46,22 +59,36 @@ public class Reminder {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Reminder(ReminderList list, String title, String notes, Integer displayOrder) {
+    public Reminder(ReminderList list, String title, String notes, LocalDate dueDate,
+                    LocalTime dueTime, Priority priority, Boolean flagged, Integer displayOrder) {
         this.list = list;
         this.title = title;
         this.notes = notes;
         this.completed = false;
+        this.dueDate = dueDate;
+        this.dueTime = dueTime;
+        this.priority = priority != null ? priority : Priority.NONE;
+        this.flagged = flagged != null ? flagged : false;
         this.displayOrder = displayOrder != null ? displayOrder : 0;
     }
 
-    public void update(String title, String notes) {
+    public void update(String title, String notes, LocalDate dueDate, LocalTime dueTime,
+                       Priority priority, Boolean flagged) {
         this.title = title;
         this.notes = notes;
+        this.dueDate = dueDate;
+        this.dueTime = dueTime;
+        if (priority != null) this.priority = priority;
+        if (flagged != null) this.flagged = flagged;
     }
 
     public void toggleComplete() {
         this.completed = !this.completed;
         this.completedAt = this.completed ? LocalDateTime.now() : null;
+    }
+
+    public void toggleFlag() {
+        this.flagged = !this.flagged;
     }
 
     public void changeList(ReminderList list) {

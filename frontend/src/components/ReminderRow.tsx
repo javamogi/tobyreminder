@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Reminder } from "@/types";
+import { Reminder, ReminderRequest } from "@/types";
 import { ReminderDetail } from "./ReminderDetail";
 import { useStore } from "@/store/useStore";
 
@@ -10,7 +10,7 @@ interface Props {
   listColor: string;
   onToggleComplete: (id: number) => void;
   onDelete: (id: number) => void;
-  onUpdate: (id: number, data: { title: string; notes?: string }) => void;
+  onUpdate: (id: number, data: ReminderRequest) => void;
 }
 
 export function ReminderRow({ reminder, listColor, onToggleComplete, onDelete, onUpdate }: Props) {
