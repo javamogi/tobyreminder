@@ -1,6 +1,6 @@
 # Apple Reminders Web - Tasks
 
-> 총 **88개** 작업 | 완료: 27/88
+> 총 **88개** 작업 | 완료: 47/88
 
 ---
 
@@ -50,32 +50,32 @@
 ## Phase 2 — 프론트엔드 초기 설정 + 기본 레이아웃
 
 ### 2.1 프로젝트 초기 설정
-- [ ] `frontend/` 디렉토리에 Next.js 프로젝트 생성 (App Router, TypeScript)
-- [ ] Tailwind CSS 설정 — Apple 색상 팔레트, 폰트 스택 커스텀
-- [ ] `next.config.js` rewrites 설정 (API 프록시 → `localhost:8080`)
-- [ ] API fetch wrapper 유틸리티 (base URL, 에러 처리)
-- [ ] SWR Provider 설정
-- [ ] TypeScript 타입 정의 (`ReminderList`, `Reminder`, API 응답)
-- [ ] Zustand 스토어 (선택된 리스트 ID, UI 상태)
+- [x] `frontend/` 디렉토리에 Next.js 프로젝트 생성 (App Router, TypeScript)
+- [x] Tailwind CSS 설정 — Apple 색상 팔레트, 폰트 스택 커스텀
+- [x] `next.config.js` rewrites 설정 (API 프록시 → `localhost:8080`)
+- [x] API fetch wrapper 유틸리티 (base URL, 에러 처리)
+- [x] SWR Provider 설정
+- [x] TypeScript 타입 정의 (`ReminderList`, `Reminder`, API 응답)
+- [x] Zustand 스토어 (선택된 리스트 ID, UI 상태)
 
 ### 2.2 사이드바
-- [ ] `Sidebar` 컴포넌트 — 280px 고정, `#F5F5F7` 배경
-- [ ] "내 리스트" 섹션 헤더 (11px, Semibold, 대문자)
-- [ ] 리스트 행 — 색상 원(●) + 이름 + 미완료 카운트
-- [ ] 리스트 선택 → 하이라이트 (`rgba(0,122,255,0.12)`)
-- [ ] "+ 리스트 추가" 버튼 → 인라인 입력 → API 호출로 생성
+- [x] `Sidebar` 컴포넌트 — 280px 고정, `#F5F5F7` 배경
+- [x] "내 리스트" 섹션 헤더 (11px, Semibold, 대문자)
+- [x] 리스트 행 — 색상 원(●) + 이름 + 미완료 카운트
+- [x] 리스트 선택 → 하이라이트 (`rgba(0,122,255,0.12)`)
+- [x] "+ 리스트 추가" 버튼 → 인라인 입력 → API 호출로 생성
 
 ### 2.3 콘텐츠 영역
-- [ ] 툴바 — 리스트 이름 (28px Bold, 리스트 색상)
-- [ ] 리마인더 목록 — 체크박스(○) + 제목 + 인덴트 구분선
-- [ ] 체크박스 클릭 → 완료 토글 API → 목록에서 제거
-- [ ] "+ 리마인더 추가" — 하단 인라인 입력, Enter 생성, 연속 입력
-- [ ] 빈 상태 ("리마인더 없음")
+- [x] 툴바 — 리스트 이름 (28px Bold, 리스트 색상)
+- [x] 리마인더 목록 — 체크박스(○) + 제목 + 인덴트 구분선
+- [x] 체크박스 클릭 → 완료 토글 API → 목록에서 제거
+- [x] "+ 리마인더 추가" — 하단 인라인 입력, Enter 생성, 연속 입력
+- [x] 빈 상태 ("리마인더 없음")
 
 ### 2.4 리마인더 인라인 편집
-- [ ] 리마인더 행 hover 시 ⓘ 버튼 표시
-- [ ] ⓘ 클릭 → 인라인 상세 편집 확장 (제목, 메모 수정)
-- [ ] 리마인더 삭제 버튼 + 확인
+- [x] 리마인더 행 hover 시 ⓘ 버튼 표시
+- [x] ⓘ 클릭 → 인라인 상세 편집 확장 (제목, 메모 수정)
+- [x] 리마인더 삭제 버튼 + 확인
 
 ---
 
