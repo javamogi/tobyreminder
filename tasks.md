@@ -1,6 +1,6 @@
 # Apple Reminders Web - Tasks
 
-> 총 **88개** 작업 | 완료: 58/88
+> 총 **88개** 작업 | 완료: 72/88
 
 ---
 
@@ -104,24 +104,24 @@
 ## Phase 4 — 스마트 리스트
 
 ### 4.1 Backend API
-- [ ] `GET /api/smart/today` — dueDate = 오늘, 미완료
-- [ ] `GET /api/smart/scheduled` — dueDate 있음, 미완료, 날짜 오름차순
-- [ ] `GET /api/smart/all` — 미완료 전체
-- [ ] `GET /api/smart/flagged` — 플래그 + 미완료
-- [ ] `GET /api/smart/completed` — 완료된 전체
-- [ ] `GET /api/smart/counts` — 각 스마트 리스트 카운트 일괄 조회
+- [x] `GET /api/smart/today` — dueDate = 오늘, 미완료
+- [x] `GET /api/smart/scheduled` — dueDate 있음, 미완료, 날짜 오름차순
+- [x] `GET /api/smart/all` — 미완료 전체
+- [x] `GET /api/smart/flagged` — 플래그 + 미완료
+- [x] `GET /api/smart/completed` — 완료된 전체
+- [x] `GET /api/smart/counts` — 각 스마트 리스트 카운트 일괄 조회
 
 ### 4.2 사이드바 스마트 리스트 그리드
-- [ ] 2열 그리드 카드 (오늘/예정/전체/플래그/완료)
-- [ ] 카드: 원형 아이콘 + 카운트(Bold) + 라벨
-- [ ] 카드 색상 — 오늘(Blue), 예정(Red), 전체(Gray), 플래그(Orange), 완료(Gray)
+- [x] 2열 그리드 카드 (오늘/예정/전체/플래그/완료)
+- [x] 카드: 원형 아이콘 + 카운트(Bold) + 라벨
+- [x] 카드 색상 — 오늘(Blue), 예정(Red), 전체(Gray), 플래그(Orange), 완료(Gray)
 
 ### 4.3 스마트 리스트 콘텐츠 뷰
-- [ ] 오늘 뷰 — 리스트별 그룹핑
-- [ ] 예정 뷰 — 날짜별 그룹핑 (overdue 상단 빨간색)
-- [ ] 전체 뷰 — 리스트별 그룹핑
-- [ ] 플래그 뷰 — 리스트별 그룹핑
-- [ ] 완료 뷰 — 완료 날짜별 그룹핑
+- [x] 오늘 뷰 — 리스트별 그룹핑
+- [x] 예정 뷰 — 날짜별 그룹핑 (overdue 상단 빨간색)
+- [x] 전체 뷰 — 리스트별 그룹핑
+- [x] 플래그 뷰 — 리스트별 그룹핑
+- [x] 완료 뷰 — 완료 날짜별 그룹핑
 
 ---
 
